@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import Tarefa from '../../models/Tarefa'
+import TarefaClass from '../../models/Tarefa'
 
 import * as enums from '../../utils/enums/tarefas'
 
@@ -47,7 +48,7 @@ const tarefaSlice = createSlice({
     remover: (state, action: PayloadAction<number>) => {
       state.itens = state.itens.filter((tarefa) => tarefa.id !== action.payload)
     },
-    cadastrar: (state, action: PayloadAction<Omit<Tarefa, 'id'>>) => {
+    cadastrar: (state, action: PayloadAction<Omit<TarefaClass, 'id'>>) => {
       const tarefaJaExiste = state.itens.find(
         (tarefa) =>
           tarefa.nome.toLocaleLowerCase() ===
@@ -63,10 +64,18 @@ const tarefaSlice = createSlice({
         }
         state.itens.push(tarefaNova)
       }
+    },
+    editar: (state, action: PayloadAction<TarefaClass>) => {
+      const index = state.itens.findIndex(
+        (tarefa) => tarefa.id === action.payload.id
+      )
+      if (index !== -1) {
+        state.itens[index] = action.payload
+      }
     }
   }
 })
 
-export const { remover, cadastrar } = tarefaSlice.actions
+export const { remover, cadastrar, editar } = tarefaSlice.actions
 
 export default tarefaSlice.reducer
